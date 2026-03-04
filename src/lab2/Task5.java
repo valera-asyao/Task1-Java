@@ -12,7 +12,7 @@ public class Task5 {
         double max = -1000; int ind_max = 0;
         double min = 1000; int ind_min = 0;
         for(int i = 0; i < n; i++){
-            arr[i] = Math.random() * (50 + 50) - 50;
+            arr[i] = (int) (Math.random() * (50 + 50 + 1) - 50);
             if(arr[i] > max)
             {
                 max = arr[i];
