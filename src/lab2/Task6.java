@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Task6 {
     public static void main(String[] args) {
+        //Подсчёт положительных, отрицательных и нулей
         Scanner scanner = new Scanner(System.in);
         System.out.print("Введите размер массива: ");
 

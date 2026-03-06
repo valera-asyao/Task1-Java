@@ -2,10 +2,12 @@ package lab2;
 import java.util.Scanner;
 
 public class Task4 {
+    //Количество дней в месяце
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Введите месяц: ");
 
+        //вывод в зависимости от месяца
         int month = scanner.nextInt();
         switch (month) {
             case 1:

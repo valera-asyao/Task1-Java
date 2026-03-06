@@ -2,6 +2,7 @@ package lab2;
 import java.util.Scanner;
 
 public class Task3 {
+    //Калькулятор с защитой от деления на ноль
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Введите первое число, второе и операцию: ");
@@ -10,6 +11,7 @@ public class Task3 {
         int b = scanner.nextInt();
         String op = scanner.next();
 
+        //в зависимости от знака - вывод
         switch (op) {
             case "+":
                 System.out.printf("%d + %d = %d", a, b, a+b);
