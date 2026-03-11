@@ -1,36 +1,43 @@
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+package lab3;
+
+import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.Random;
 
-public class Task1{
+public class Task1 {
+    // Чтение и запись байтов
     public static void main(String[] args) {
-        try (FileOutputStream outputStream = new FileOutputStream("input.bin")) {
-            for(int i = 0; i < 10; i++)
-            {
-                int value = (int) (Math.random() * 1000);
-                outputStream.write(value >> 24); 
-                outputStream.write(value >> 16); 
-                outputStream.write(value >> 8); 
-                outputStream.write(value); 
+        String filename = "input.bin";
+        Random random = new Random();
+        int count = 100;
+
+        // Запись 100 случайных целых чисел
+        try (FileOutputStream fos = new FileOutputStream(filename)) {
+            ByteBuffer buffer = ByteBuffer.allocate(4); // Буфер на 4 байта для одного int
+
+            for (int i = 0; i < count; i++) {
+                int num = random.nextInt(1000);
+                buffer.putInt(0, num); // Кладём число в буфер
+                fos.write(buffer.array()); // Записываем массив из 4 байтов в файл
             }
-            
-            
-        }       
-        catch (IOException e) {
-            e.printStackTrace();
-            System.exit(0);
+            System.out.println("Записано 100 чисел в " + filename);
+        } catch (IOException e) {
+            System.err.println("Ошибка при записи: " + e.getMessage());
         }
 
-        try (FileInputStream inputStream = new FileInputStream("input.bin")){
-            int num;
-            while((num = inputStream.read()) != -1){
-                System.out.print(num + "\t");
+        // Чтение из файла
+        try (FileInputStream fis = new FileInputStream(filename)) {
+            System.out.println("Прочитанные числа:");
+            byte[] bytes = new byte[4]; // Массив для чтения одного числа
+
+            while (fis.read(bytes) != -1) {
+                // Превращаем 4 байта обратно в int
+                int num = ByteBuffer.wrap(bytes).getInt();
+                System.out.print(num + " ");
             }
-        }
-        catch(IOException e){
-            e.printStackTrace();
-            System.exit(0);
+            System.out.println("\nЧтение завершено.");
+        } catch (IOException e) {
+            System.err.println("Ошибка при чтении: " + e.getMessage());
         }
     }
 }
