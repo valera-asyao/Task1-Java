@@ -21,6 +21,7 @@ public class Task4 {
                 new FileInputStream(filename), StandardCharsets.UTF_8))) {
 
             String line;
+            //Ищем слово в файле по строкам
             while ((line = br.readLine()) != null) {
                 pos++;
                 if (line.toLowerCase().contains(word)) {

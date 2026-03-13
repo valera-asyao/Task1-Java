@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class Task7 {
+    // Шифр Цезаря для файл
     public static void main(String[] args) {
         String input = "input.txt";
         String output = "encrypted.txt";

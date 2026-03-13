@@ -20,6 +20,7 @@ public class Task3 {
                 lines++;
                 chars += line.length() + 1; // +1 за символ новой строки
 
+                //Если при удалении лишних пробелов строка не стала пустой
                 if (!line.trim().isEmpty()) {
                     String[] wordsArray = line.trim().split("\\s+");
                     words += wordsArray.length;

@@ -3,6 +3,7 @@ package lab3;
 import java.io.*;
 
 public class Task8 {
+    //Сравнение скорости чтения с буфером и без
     public static void main(String[] args) throws IOException {
         String bigFile = "large_test.txt";
         System.out.print("Создание тестового файла... ");

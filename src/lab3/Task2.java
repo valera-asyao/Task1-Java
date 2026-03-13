@@ -15,6 +15,7 @@ public class Task2 {
 
         long startTime = System.currentTimeMillis();
 
+        //Чтение и запись данных с файла
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(sourcePath));
              BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(destPath))) {
             byte[] buffer = new byte[8192];
@@ -34,3 +35,10 @@ public class Task2 {
 
     }
 }
+/*
+Введите путь к исходному файлу: input.bin
+Введите путь к целевому файлу: output.bin
+Размер файла: 9 байт
+Время копирования: 1 мс
+Файл успешно скопирован!
+ */

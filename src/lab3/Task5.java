@@ -11,6 +11,7 @@ public class Task5 {
         System.out.print("Введите имя файла (пустая строка - конец): ");
         String filename = scanner.nextLine();
 
+        //Пока не пустая строка - записываем
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(filename), StandardCharsets.UTF_8))) {
             while (true) {

@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Task6 {
     public static void main(String[] args) {
+        // Чтение чисел из файла и вычисление статистики
         File file = new File("numbers.txt");
         if (!file.exists()) {
             System.out.println("Файл не найден.");
