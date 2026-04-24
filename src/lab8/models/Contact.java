@@ -2,12 +2,12 @@ package lab8.models;
 
 import java.util.Objects;
 
-public class Contact{
+public class Contact implements Comparable<Contact> {
     private String name;
     private String phoneNumber;
     private String email;
 
-    Contact(String name, String phoneNumber, String email){
+    public Contact(String name, String phoneNumber, String email){
         setName(name);
         setPhoneNumber(phoneNumber);
         setEmail(email);
@@ -47,7 +47,7 @@ public class Contact{
 
 @Override
 public String toString() {
-return "Контакт [Имя: " + name + ", номер" + phoneNumber + "email: " + email + "]\n";
+return "Контакт [Имя: " + name + ", номер " + phoneNumber + " email: " + email + "]\n";
 }
     
 @Override
@@ -55,9 +55,12 @@ public boolean equals(Object o){
     if (this == o) return true;
     if(o == null || getClass() != o.getClass()) return false;
     Contact user = (Contact) o;
-    return Objects.equals(name, user.name)
-        && Objects.equals(phoneNumber, user.phoneNumber)
-        && Objects.equals(email, user.email);
+    return Objects.equals(phoneNumber, user.phoneNumber);
+}
+
+@Override
+public int compareTo(Contact o){
+    return this.name.compareToIgnoreCase(o.name);
 }
 
 @Override

@@ -1,87 +1,94 @@
 package lab8.models;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.nio.Buffer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
 
-import lab8.models.*;
+import lab8.utils.*;
+import java.io.*;
+import java.util.*;
 
 public class PhoneBook {
-    private ArrayList<Contact> listContact;
+    private final List<Contact> contacts;
+    // HashMap для быстрого поиска по номеру телефона O(1)
+    private final Map<String, Contact> phoneIndex;
 
-    void addContact(Contact contact){
-        for(int i = 0; i < listContact.size(); i++){
-            if(listContact.get(i).equals(contact)){
-                throw new IllegalArgumentException("Такой контакт уже существует");
-            }
-        }
-        listContact.add(contact);
+    public PhoneBook() {
+        this.contacts = new ArrayList<>();
+        this.phoneIndex = new HashMap<>();
     }
 
-    void removeContact(Contact contact){
-        if(!listContact.contains(contact)){
-            throw new IllegalArgumentException("Такого контакта не существует");
+    public boolean addContact(Contact contact) {
+        if (phoneIndex.containsKey(contact.PhoneNumber())) {
+            return false; // Контакт с таким номером уже существует
         }
-        listContact.remove(contact);
+        contacts.add(contact);
+        phoneIndex.put(contact.PhoneNumber(), contact);
+        ActionLogger.log("Добавлен контакт: " + contact.Name() + " (" + contact.PhoneNumber() + ")");
+        return true;
     }
 
-    ArrayList<Contact> findByName(String name){
-        ArrayList<Contact> result = new ArrayList<>();
-        for(int i = 0; i < listContact.size(); i++){
-            if(listContact.get(i).Name().equals(name)){
-                result.add(listContact.get(i));
+    public boolean removeContact(String phoneNumber) {
+        String formattedPhone = PhoneNumberValidator.formatPhone(phoneNumber);
+        Contact contact = phoneIndex.remove(formattedPhone);
+        if (contact != null) {
+            contacts.remove(contact);
+            ActionLogger.log("Удален контакт: " + contact.Name() + " (" + formattedPhone + ")");
+            return true;
+        }
+        return false;
+    }
+
+    public List<Contact> findByName(String nameQuery) {
+        List<Contact> result = new ArrayList<>();
+        String lowerCaseQuery = nameQuery.toLowerCase();
+        for (Contact contact : contacts) {
+            if (contact.Name().toLowerCase().contains(lowerCaseQuery)) {
+                result.add(contact);
             }
         }
+        ActionLogger.log("Поиск по имени: " + nameQuery + ". Найдено: " + result.size());
         return result;
     }
 
-    ArrayList<Contact> findByPhoneNumber(String phoneNumber){
-        ArrayList<Contact> result = new ArrayList<>();
-        for(int i = 0; i < listContact.size(); i++){
-            if(listContact.get(i).PhoneNumber().equals(phoneNumber)){
-                result.add(listContact.get(i));
-            }
-        }
-        return result;
+    public Contact findByPhone(String phoneNumber) {
+        String formattedPhone = PhoneNumberValidator.formatPhone(phoneNumber);
+        ActionLogger.log("Поиск по номеру: " + formattedPhone);
+        return phoneIndex.get(formattedPhone);
     }
 
-    ArrayList<Contact> getAllContacts(){
-        ArrayList<Contact> result = new ArrayList<>(listContact);
-        Collections.sort(result, (c1, c2) -> c1.Name().compareTo(c2.Name()));
-        return result;
+    public List<Contact> getAllContacts() {
+        List<Contact> sortedContacts = new ArrayList<>(contacts);
+        Collections.sort(sortedContacts);
+        return sortedContacts;
     }
 
-    public void saveToFile(String filename){
-        try(FileWriter fw = new FileWriter(filename)){
-            for(Contact contact : listContact){
-                fw.write(contact.Name() + "|" + contact.PhoneNumber() + "|" + contact.Email() + "\n");
+    public void saveToFile(String filename) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Contact contact : contacts) {
+                writer.write(contact.Name() + "|" + contact.PhoneNumber() + "|" + contact.Email());
+                writer.newLine();
             }
-        } catch (IOException e) {
-            System.err.println("Ошибка при сохранении контактов в файл");
+            ActionLogger.log("Контакты сохранены в файл: " + filename);
         }
     }
 
-    public void loadFromFile(String filename){
-        try(BufferedReader fr = new BufferedReader(new FileReader(filename)))
-        {
+    public void loadFromFile(String filename) throws IOException {
+        int addedCount = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
-            while((line = fr.readLine()) != null){
-                    String[] parts = line.split("|");
-                    if(parts.length == 3){
-                        Contact contact = new Contact(parts[0], parts[1], parts[2]);
-                        listContact.add(contact);
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|", -1); // -1 чтобы сохранить пустые строки в конце (email)
+                if (parts.length >= 2) {
+                    try {
+                        String email = parts.length == 3 ? parts[2] : "";
+                        Contact contact = new Contact(parts[0], parts[1], email);
+                        if (addContact(contact)) {
+                            addedCount++;
+                        }
+                    } catch (IllegalArgumentException e) {
+                        // Пропускаем некорректные строки в файле
+                        System.err.println("Пропущена некорректная запись в файле: " + line);
                     }
-                }       
-        }
-        catch (IOException e) {
-            System.err.println("Ошибка при чтении контактов из файла");
+                }
+            }
+            ActionLogger.log("Загружено контактов из файла " + filename + ": " + addedCount);
         }
     }
 }
