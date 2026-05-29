@@ -1,0 +1,5 @@
+[2026-05-29 16:21:14.288] GET /hello?name=Ivan 200 89ms
+[2026-05-29 16:23:38.524] PUT /data?key=user1 201 1ms
+[2026-05-29 16:23:52.523] DELETE /data?key=user1 204 1ms
+[2026-05-29 16:24:28.340] GET /status 200 0ms
+[2026-05-29 16:24:41.814] POST /echo 200 1ms
